@@ -1432,6 +1432,7 @@ export class Game extends GameCompatible {
 	 * @param { string } ip
 	 * @param { (result: boolean) => any } callback
 	 */
+	// TODO: 这里是联机部分的主要代码
 	connect(ip, callback) {
 		if (game.online) return;
 		let withport = false;
@@ -1442,6 +1443,7 @@ export class Game extends GameCompatible {
 				withport = true;
 			}
 		}
+		
 		if (!withport) ip = ip + ":8080";
 		_status.connectCallback = callback;
 		try {
