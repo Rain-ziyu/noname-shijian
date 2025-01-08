@@ -25,6 +25,7 @@ import { Check } from "./check.js";
 import security from "../util/security.js";
 import { GameCompatible } from "./compatible.js";
 import { save } from "../util/config.js";
+import { Sandbox } from "../util/sandbox.js";
 
 export class Game extends GameCompatible {
 	documentZoom;
@@ -60,6 +61,14 @@ export class Game extends GameCompatible {
 	 * @type { boolean }
 	 */
 	chess;
+	/**
+	 * @type { WebSocket }
+	 */
+	ws;
+	/**
+	 * @type { Sandbox }
+	 */
+	sandbox;
 	/**
 	 * @type { Player }
 	 */
@@ -1434,16 +1443,18 @@ export class Game extends GameCompatible {
 	 */
 	// TODO: 这里是联机部分的主要代码
 	connect(ip, callback) {
+		// 如果已经是在线模式直接返回
 		if (game.online) return;
 		let withport = false;
 		let index = ip.lastIndexOf(":");
 		if (index != -1) {
+			// 检查是否输入端口号
 			index = parseFloat(ip.slice(index + 1));
 			if (index && Math.floor(index) == index) {
 				withport = true;
 			}
 		}
-		
+		// 如果没有默认8080
 		if (!withport) ip = ip + ":8080";
 		_status.connectCallback = callback;
 		try {
@@ -1454,6 +1465,7 @@ export class Game extends GameCompatible {
 			}
 			let str = "";
 			if (!ip.startsWith("wss://") && !ip.startsWith("ws://")) str = get.config("wss_mode", "connect") ? "wss://" : "ws://";
+			// TODO: 使用websocket通信    可以重构该部分代码
 			game.ws = new WebSocket(str + ip + "");
 		} catch {
 			// 今天狂神龙尊来了这里也没有参数
@@ -1461,7 +1473,12 @@ export class Game extends GameCompatible {
 			if (callback) callback(false);
 			return;
 		}
-		game.sandbox = security.createSandbox();
+		const sandbox = security.createSandbox();
+		if (sandbox) {
+			game.sandbox = sandbox;
+		} else {
+			throw new Error("Failed to create sandbox");
+		}
 		game.ws.onopen = lib.element.ws.onopen;
 		game.ws.onmessage = lib.element.ws.onmessage;
 		game.ws.onerror = lib.element.ws.onerror;

@@ -1986,6 +1986,7 @@ export class Get extends GetCompatible {
 	}
 	parsedResult(item) {
 		if (!item) return item;
+		// TODO: 这里定义了所有的解析函数 通过使用方法名进行区分转化不同的js函数 可进行重构
 		if (typeof item == "string") {
 			if (item.startsWith("_noname_func:")) {
 				return get.infoFuncOL(item);

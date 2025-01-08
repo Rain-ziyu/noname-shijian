@@ -9783,20 +9783,25 @@ export class Library {
 					delete _status.connectCallback;
 				}
 			},
+			// TODO: 这里是websocket的onmessage事件，当接收到消息时会触发
 			onmessage: function (messageevent) {
+				// 心跳包
 				if (messageevent.data == "heartbeat") {
 					this.send("heartbeat");
 					return;
 				}
 				var message;
 				try {
+					// 正常数据包 需要解析消息内容
 					message = JSON.parse(messageevent.data);
 					if (!Array.isArray(message) || typeof lib.message.client[message[0]] !== "function") {
+						// 消息的第一个元素不是一个function 那么抛出异常
 						throw "err";
 					}
 					if (game.sandbox) security.enterSandbox(game.sandbox);
 					try {
 						for (var i = 1; i < message.length; i++) {
+							// 解析消息内容 即核心逻辑 如何解析消息
 							message[i] = get.parsedResult(message[i]);
 						}
 					} finally {

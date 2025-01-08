@@ -3,6 +3,10 @@ import PauseManager from "../game/PauseManager.js";
 import { GameEventManager } from "../library/element/gameEvent.js";
 
 export class status {
+		/**
+	 * @type { string  }
+	 */
+	ip;
 	imchoosing = false;
 	clicked = false;
 	auto = false;
