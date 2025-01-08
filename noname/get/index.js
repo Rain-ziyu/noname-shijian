@@ -1873,6 +1873,7 @@ export class Get extends GetCompatible {
 		try {
 			Object.entries(JSON.parse(item.slice(14))).forEach(entry => {
 				const key = entry[0];
+				// 如果返回的内容仍然不是一个函数，那么进行递归解析 知道最终得到的是一个function
 				if (typeof evt[key] != "function") evt[key] = get.parsedResult(entry[1]);
 			});
 		} catch (error) {

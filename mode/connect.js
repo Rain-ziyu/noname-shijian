@@ -61,8 +61,8 @@ export default () => {
 					game.saveConfig("last_ip", ip);
 					game.connect(ip, function (success) {
 						if (success) {
-							game.requireSandboxOn(ip);
 							var info = lib.config.reconnect_info;
+							game.requireSandboxOn(ip);
 							if (info && info[0] == _status.ip) {
 								game.onlineID = info[1];
 								if (typeof (game.roomId = info[2]) == "string") game.roomIdServer = true;

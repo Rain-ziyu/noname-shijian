@@ -9812,6 +9812,7 @@ export class Library {
 					console.log("invalid message: " + messageevent.data);
 					return;
 				}
+				// 将接收到的服务端发送过来的所有最终function进行执行
 				lib.message.client[message.shift()].apply(null, message);
 			},
 			onerror: function (e) {
@@ -12688,6 +12689,7 @@ export class Library {
 					ui.connecting.firstChild.innerHTML = "重连成功";
 				}
 			},
+			// 在客户端第一次连接时，客户端自己初始化一个自己的id放入到wsOL这个map中，非常巧妙，其实理论上每一个手机该数组只有一个，并且id是自己的
 			onconnection: id => lib.init.connection((lib.wsOL[id] = new lib.element.NodeWS(id))),
 			onmessage: function (id, message) {
 				if (lib.wsOL[id]) {
